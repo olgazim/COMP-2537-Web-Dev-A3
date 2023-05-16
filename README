@@ -1,0 +1,8 @@
+Assignment 3
+
+1. The web app should have a homepage that displays a list of all the Pokémon available.
+2. The web app should have a filter option that allows users to filter the Pokémon by type.
+3. The web app should have a pagination feature that allows users to navigate through the list.
+4. The web app should display the total number of Pokémon and the number of Pokémon being
+displayed.
+5. The web app should display more information about a specific Pokémon when the user clicks on it.
