@@ -53,3 +53,27 @@
     border: 2px solid #072AC8;
     color: #072AC8;
 }
+
+#pokemonTypesFilter {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.filter {
+    display: none;
+}
+
+
+
+label {
+    display: inline-block;
+    border-radius: 5px;
+    cursor: pointer;
+    flex-basis: 7%;
+    background-color: lightgray;
+}
+
+input[type="checkbox"]:checked+label {
+    background-color: rgba(7, 42, 200, 0.2);
+}

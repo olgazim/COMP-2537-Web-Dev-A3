@@ -108,6 +108,20 @@ const paginate = async (currentPage, PAGE_SIZE, pokemons) => {
     <p>${displayStart} - ${displayEnd}</p>`);
 };
 
+const fetchPokemonTypes = async () => {
+  $("#pokemonTypesFilter").empty();
+  const res = await axios.get("https://pokeapi.co/api/v2/type");
+  const types = res.data.results.map((type) => type.name);
+  types.forEach((type) => {
+    $("#pokemonTypesFilter").append(`
+    <div class="filters mx-2">
+    <input id="${type}" class="filter" type="checkbox" name="type" onclick="setup()" value="${type}">
+    <label for="${type}" for="${type}" class="px-2"> ${type} </label>
+    </div>
+    `);
+  });
+};
+
 // const filterPokemonsByType = async (pokemons, selectedTypes) => {};
 
 const setup = async () => {
@@ -116,22 +130,6 @@ const setup = async () => {
     "https://pokeapi.co/api/v2/pokemon?offset=0&limit=810"
   );
   pokemons = response.data.results;
-  // slice the pokemons
-  //   const pokemons = response.data.results.slice(0, 15);
-  //   for (let i = 0; i < pokemons.length; i++) {
-  //     let innerResponse = await axios.get(`${pokemons[i].url}`);
-  //     let thisPokemon = innerResponse.data;
-  //     //   show modal on More btn click
-  //     $("#pokemonCards").append(`
-  //       <div class="pokemonCard card" pokemonName=${thisPokemon.name}>
-  //         <h3>${thisPokemon.name}</h3>
-  //         <img src="${thisPokemon.sprites.front_default}" alt="${thisPokemon.name}"/>
-  //         <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pokemonModal">
-  //           More
-  //         </button>
-  //         </div>
-  //         `);
-  //   }
 
   paginate(currentPage, PAGE_SIZE, pokemons);
 
@@ -188,8 +186,8 @@ const setup = async () => {
   });
 
   // add event listener to pagination buttons
-  $("body").on("click", "..numberedButtons", async function (e) {
-    const pageNum = parseInt($(this).attr("pageNum"));
+  $("body").on("click", ".numberedButtons", async function (e) {
+    const pageNum = parseInt($(this).attr("value"));
     currentPage = pageNum;
     // if (selectedTypes.length == 0) {
     paginate(currentPage, POKEMONS_PER_PAGE, pokemons);
@@ -200,5 +198,7 @@ const setup = async () => {
     updatePaginationDiv(currentPage, numPages);
   });
 };
+
+fetchPokemonTypes();
 
 $(document).ready(setup);
