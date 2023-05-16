@@ -115,14 +115,24 @@ const fetchPokemonTypes = async () => {
   types.forEach((type) => {
     $("#pokemonTypesFilter").append(`
     <div class="filters mx-2">
-    <input id="${type}" class="filter" type="checkbox" name="type" onclick="setup()" value="${type}">
+    <input id="${type}" class="filter" id ="typesFilter" type="checkbox" name="type" onclick="setup()" value="${type}">
     <label for="${type}" for="${type}" class="px-2"> ${type} </label>
     </div>
     `);
   });
 };
 
-// const filterPokemonsByType = async (pokemons, selectedTypes) => {};
+const applyTypeFilter = async (pokemons, selectedTypes) => {
+  let pokemonsToDisplay = [];
+  for (let i = 0; i < pokemons.length; i++) {
+    const res = await axios.get(pokemons[i].url);
+    const types = res.data.types.map((type) => type.type.name);
+    if (selectedTypes.every((type) => types.includes(type))) {
+      pokemonsToDisplay.push(pokemons[i]);
+    }
+  }
+  return pokemonsToDisplay;
+};
 
 const setup = async () => {
   $("#pokemonCards").empty();
@@ -131,12 +141,23 @@ const setup = async () => {
   );
   pokemons = response.data.results;
 
+  const pokemonsToDisplay = $(".filter:checked")
+    .map(function () {
+      return this.value;
+    })
+    .get();
+
+  if (pokemonsToDisplay.length > 0) {
+    const filteredPokemons = await applyTypeFilter(pokemons, pokemonsToDisplay);
+    pokemons = filteredPokemons;
+  }
   paginate(currentPage, PAGE_SIZE, pokemons);
 
   // display pokemon details in modal
   $("body").on("click", ".pokemonCard", async function (e) {
     const pokemonName = $(this).attr("pokemonName");
     // console.log("pokemonName: ", pokemonName);
+
     const res = await axios.get(
       `https://pokeapi.co/api/v2/pokemon/${pokemonName}`
     );
@@ -187,15 +208,11 @@ const setup = async () => {
 
   // add event listener to pagination buttons
   $("body").on("click", ".numberedButtons", async function (e) {
-    const pageNum = parseInt($(this).attr("value"));
-    currentPage = pageNum;
-    // if (selectedTypes.length == 0) {
-    paginate(currentPage, POKEMONS_PER_PAGE, pokemons);
+    currentPage = Number(e.target.value);
 
-    // }
-
-    //update pagination buttons
-    updatePaginationDiv(currentPage, numPages);
+    if (pokemonsToDisplay.length == 0) {
+      paginate(currentPage, PAGE_SIZE, pokemons);
+    }
   });
 };
 
