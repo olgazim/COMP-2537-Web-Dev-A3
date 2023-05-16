@@ -6,12 +6,17 @@ const setup = async () => {
   //   const pokemons = response.data.results;
   // slice the pokemons
   const pokemons = response.data.results.slice(0, 15);
-  var newList = $(`<ol></ol>`);
   for (let i = 0; i < pokemons.length; i++) {
-    newList.append(`<li> ${pokemons[i].name}</li>`);
+    let innerResponse = await axios.get(`${pokemons[i].url}`);
+    let thisPokemon = innerResponse.data;
+    $("#pokemonCards").append(`
+            <div class="pokemon-card card">
+                <h3>${thisPokemon.name}</h3>
+                <img src = "${thisPokemon.sprites.front_default}" alt = "${thisPokemon.name}">
+                <button type="button" class="btn dark-blue"> More </button>
+            </div>
+        `);
   }
-  $("#pokemonCards").append(newList);
-  console.log(pokemons);
 };
 
 $(document).ready(setup);
