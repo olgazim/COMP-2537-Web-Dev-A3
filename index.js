@@ -9,12 +9,15 @@ const setup = async () => {
   for (let i = 0; i < pokemons.length; i++) {
     let innerResponse = await axios.get(`${pokemons[i].url}`);
     let thisPokemon = innerResponse.data;
+    console.log(thisPokemon);
     $("#pokemonCards").append(`
-            <div class="pokemon-card card">
-                <h3>${thisPokemon.name}</h3>
-                <img src = "${thisPokemon.sprites.front_default}" alt = "${thisPokemon.name}">
-                <button type="button" class="btn dark-blue"> More </button>
-            </div>
+      <div class="pokemonCard card"  >
+        <h3>${thisPokemon.name}</h3> 
+        <img src="${thisPokemon.sprites.front_default}" alt="${thisPokemon.name}"/>
+        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#pokemonModal">
+          More
+        </button>
+        </div>  
         `);
   }
 };

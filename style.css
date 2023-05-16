@@ -2,13 +2,13 @@
     background-color: #072AC8;
 }
 
-.cards-container {
+#pokemonCards {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
 }
 
-.pokemon-card {
+.pokemonCard {
     width: 200px;
     height: 200px;
     margin: 10px;
